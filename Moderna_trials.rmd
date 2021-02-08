@@ -47,3 +47,10 @@ effectiveness =  17.01454  /( 17.01454   +1)
 print(effectiveness*100)
 ```
 
+```{r}
+low=(9.28/(9.28 + 1))*100
+hi=(34.70/(34.70 +1))*100
+options(digits=2)
+```
+
+## Effectiveness Confidence Interval `r low`  to `r hi`
