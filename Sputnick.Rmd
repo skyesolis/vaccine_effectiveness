@@ -60,6 +60,13 @@ fisher.test(resultsExp)
 effectiveness =  11.96541 /( 11.96541  +1)
 print(effectiveness*100)
 ```
-# Conclusion effectiveness is simply turning odds (in this case an odds_ratio) into a percentage If the odds of something happening is O, then the probability of it happening is O/(1 + O). To turn probability to a percent just multiply by 100.
+## Conclusion effectiveness is simply turning odds (in this case an odds_ratio) into a percentage If the odds of something happening is O, then the probability of it happening is O/(1 + O). To turn probability to a percent just multiply by 100. However effectivness should not just be a number - It should be cast as a confidence interval.
 
+```{r}
+low=(6.8/(6.8 + 1))*100
+hi=(22.24/(22.24 +1))*100
+options(digits=2)
+```
+
+## Effectiveness Confidence Interval `r low`  to `r hi`
 
