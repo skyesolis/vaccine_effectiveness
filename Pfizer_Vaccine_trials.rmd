@@ -41,3 +41,11 @@ fisher.test(results)
 ```
 
 ## The fisher exact test is an odds-ratio test. It is commonly used in clinical trials to test the effectiveness of preventitive drugs like vaccines. In this case it says the odds of getting covid is 9.47 times greater if you had taken the placebo than if you had taken the vaccine. The media is reporting this as 90% effective. It also gives you a confidence interval that has the true odds ratio within it 95% of the time.  That interval is 4.76 to 21.44
+
+```{r}
+low=(4.762334/(4.762334 + 1))*100
+hi=(21.438785/(21.438785 +1))*100
+options(digits=2)
+```
+
+## Effectiveness Confidence Interval `r low`  to `r hi`
