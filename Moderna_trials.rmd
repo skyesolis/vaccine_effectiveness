@@ -1,0 +1,49 @@
+---
+title: "Moderna Vaccine_performance"
+author: "Dr K"
+date: "6 Feb 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(tigerstats)
+require(tidyverse)
+require(knitr)
+```
+
+## Moderna Vaccine
+  
+The trial enrolled 30,420 volunteers who were randomly assigned in a 1:1 ratio to receive either vaccine or placebo (15,210 participants in each group). More than 96% of participants received both injections, and 2.2% had evidence (serologic, virologic, or both) of SARS-CoV-2 infection at baseline. Symptomatic Covid-19 illness was confirmed in 185 participants in the placebo group (56.5 per 1000 person-years; 95% confidence interval [CI], 48.7 to 65.3) and in 11 participants in the mRNA-1273
+
+```{r}
+groupsize = 30420
+subgp = groupsize/2
+vacine = c(subgp-11,11)
+placebo =  c(subgp-185,185)
+results = as.table(cbind(vacine,placebo))
+rownames(results) <- c("none","covid")
+
+```
+
+## Look at a "percentage barchart" of the reported cases.  If the vaccine is innefective then covid should be more or less equally distributed between the vaccine and the placebo.  The more effective the vaccine the lower would be the percent in the group of covid.
+
+
+```{r}
+barchartGC(results,type = "percent")
+```
+
+## Wow, that barchart shows that in the group who got covid most of them had taken the placebo.  The placebo group is almost 20 times bigger than the vaccine group.
+
+
+```{r}
+fisher.test(results)
+```
+
+## The fisher exact test is an odds-ratio test. It is commonly used in clinical trials to test the effectiveness of preventitive drugs like vaccines. In this case it says the odds of getting covid is 17.01 times greater if you had taken the placebo than if you had taken the vaccine. The media is reporting this as 95% effective. It also gives you a confidence interval that has the true odds ratio within it 95% of the time. That interval is 9.28 to 34.70. To turn odds in probability p=odds/1+odds 
+
+```{r}
+effectiveness =  17.01454  /( 17.01454   +1)
+print(effectiveness*100)
+```
+

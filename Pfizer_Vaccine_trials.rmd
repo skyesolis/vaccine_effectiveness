@@ -1,0 +1,43 @@
+---
+title: "Pfizer_Vaccine_performance"
+author: "Dr K"
+date: "11/9/2020"
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(tigerstats)
+require(tidyverse)
+require(knitr)
+```
+
+## Create a table from the published data
+
+
+```{r}
+groupsize = 44000
+subgp = groupsize/2
+vaccine = c(subgp-9,9)
+placebo =  c(subgp-85,85)
+results = as.table(cbind(vaccine,placebo))
+rownames(results) <- c("none","covid")
+
+```
+
+## Look at a "percentage barchart" of the reported cases.  If the vaccine is innefective then covid should be more or less equally distributed between the vaccine and the placebo.  The more effective the vaccine the lower would be the percent in the group of covid.
+
+```{r}
+barchartGC(results,type = "percent")
+```
+  
+## Wow, that barchart shows that in the group who got covid most of them had taken the placebo.  The placebo group is close to 10 times bigger than the vaccine group.
+
+```{r}
+fisher.test(results)
+```
+
+## The fisher exact test is an odds-ratio test. It is commonly used in clinical trials to test the effectiveness of preventitive drugs like vaccines. In this case it says the odds of getting covid is 9.47 times greater if you had taken the placebo than if you had taken the vaccine. The media is reporting this as 90% effective. It also gives you a confidence interval that has the true odds ratio within it 95% of the time.  That interval is 4.76 to 21.44

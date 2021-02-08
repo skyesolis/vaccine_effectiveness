@@ -1,0 +1,65 @@
+---
+title: "Sputnick Vaccine Russian"
+author: "Dr K"
+date: "2/2/2021"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(tigerstats)
+require(tidyverse)
+require(knitr)
+```
+
+# What they did  
+
+## The preliminary findings were published in The Lancet on Tuesday (Sep 2, 2021) and are based on data gathered from 19,866 participants, of which around three-quarters (14,964) received two doses of the vaccine and a quarter (4,902) were given two doses of a placebo. Sixteen cases of symptomatic Covid-19 were confirmed in the vaccine and sixty two cases were found in the placebo group -- equating to an efficacy of 91.6% (according to their analysis).
+
+Most Clinical trials have equal sized groups - but Russia made a more sensible approach by having a larger vaccine group (betting on the come so-to-speak).  This is a good one for beginning statistics students so they learn their analysis skills on real data.
+
+```{r}
+
+vaccine = c(14964-16,16)
+placebo =  c(4902-62,62)
+results = as.table(cbind(vaccine,placebo))
+rownames(results) <- c("none","covid")
+
+```
+
+## We show two barcharts - The first is results of the study and the second is what it would look like if the vaccine was not effective.
+
+
+
+```{r}
+barchartGC(results,type = "percent", main="Results from the Sputnik V Clinical Trial")
+```
+  
+We run a chi-sq test using Chisq Gc in order to obtain expected results when vaccine does not work.
+
+```{r}
+chisqtestGC(results)
+vaccine2=c(14905,59)
+placebo2=c(4882,19)
+resultsExp = as.table(cbind(vaccine2,placebo2))
+rownames(resultsExp) <- c("none","covid")
+barchartGC(resultsExp,type = "percent",main="Expected results of ineffective vaccine \n With the same patient assignment structure")
+```
+  
+## Notice how different the two barcharts appear.  Even your grandma could see that most of the people that got covid in the Sputnik V trial came from the group of people who received the placebo!
+
+```{r}
+fisher.test(results)
+fisher.test(resultsExp)
+```
+
+## The fisher exact test is an odds-ratio test. It is commonly used in clinical trials to test the effectiveness of preventitive drugs like vaccines. In this case it says the odds of getting covid is 11.96 times greater if you had taken the placebo than if you had taken the vaccine. The media is reporting this as 92% effective. It also gives you a confidence interval that has the true odds ratio within it 95% of the time.  That interval is 6.8 to 22.24. To turn odds in probability p=odds/1+odds
+
+```{r}
+effectiveness =  11.96541 /( 11.96541  +1)
+print(effectiveness*100)
+```
+# Conclusion effectiveness is simply turning odds (in this case an odds_ratio) into a percentage If the odds of something happening is O, then the probability of it happening is O/(1 + O). To turn probability to a percent just multiply by 100.
+
+
