@@ -37,7 +37,7 @@ barchartGC(results,type = "percent")
 fisher.test(results)
 ```
 
-## The fisher exact test is an odds-ratio test. It is commonly used in clinical trials to test the effectiveness of preventitive drugs like vaccines. In this case it says the odds of getting covid is 1.215 times greater if you had taken the placebo than if you had taken the vaccine. The media is reporting this as hardly effective. It also gives you a confidence interval that has the true odds ratio within it 95% of the time.  That interval is .62 to 2.38
+## The fisher exact test is an odds-ratio test. It is commonly used in clinical trials to test the effectiveness of preventitive drugs like vaccines. In this case it says there is NO evidence of a difference between the vaccine and the placebo. The p-value of .64 leads us to fail to reject the idea that there is a difference between the vaccine and the placebo. Continuing on, the point value estimate of the odds of getting covid is 1.215 times greater if you had taken the placebo than if you had taken the vaccine. The media is reporting this as hardly effective. It also gives you a confidence interval that has the true odds ratio within it 95% of the time.  That interval is .62 to 2.38.  South Africa has abandoned the use of this vaccine against their prevalent strain of covid the B.1.351 varient.
 
 ```{r}
 effectiveness =  1.215  /( 1.215   +1)
