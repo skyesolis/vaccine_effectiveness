@@ -37,15 +37,15 @@ barchartGC(results,type = "percent")
 ## Wow, that barchart shows that in the group who got covid most of them had taken the placebo.  The placebo group is close to 10 times bigger than the vaccine group.
 
 ```{r}
-fisher.test(results)
+fish <- fisher.test(results)
+options(digits=2)
 ```
 
-## The fisher exact test is an odds-ratio test. It is commonly used in clinical trials to test the effectiveness of preventitive drugs like vaccines. In this case it says the odds of getting covid is 9.47 times greater if you had taken the placebo than if you had taken the vaccine. The media is reporting this as 90% effective. It also gives you a confidence interval that has the true odds ratio within it 95% of the time.  That interval is 4.76 to 21.44
+## The fisher exact test is an odds-ratio test. It is commonly used in clinical trials to test the effectiveness of preventitive drugs like vaccines. In this case it says the odds of getting covid is `r fish$estimate` times greater if you had taken the placebo than if you had taken the vaccine. The media is reporting this as 90% effective. It also gives you a confidence interval that has the true odds ratio within it 95% of the time.  That interval is `r fish$conf.int[1]` to `r fish$conf.int[2]`
 
 ```{r}
-low=(4.762334/(4.762334 + 1))*100
-hi=(21.438785/(21.438785 +1))*100
-options(digits=2)
+low=(fish$conf.int[1]/(fish$conf.int[1] + 1))*100
+hi=(fish$conf.int[2]/(fish$conf.int[2] + 1))*100
 ```
 
 ## Effectiveness Confidence Interval `r low`  to `r hi`
