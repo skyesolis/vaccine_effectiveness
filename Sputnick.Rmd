@@ -50,23 +50,29 @@ barchartGC(resultsExp,type = "percent",main="Expected results of ineffective vac
 ## Notice how different the two barcharts appear.  Even your grandma could see that most of the people that got covid in the Sputnik V trial came from the group of people who received the placebo!
 
 ```{r}
+
 fisher.test(results)
 fisher.test(resultsExp)
 ```
-
-## The fisher exact test is an odds-ratio test. It is commonly used in clinical trials to test the effectiveness of preventitive drugs like vaccines. In this case it says the odds of getting covid is 11.96 times greater if you had taken the placebo than if you had taken the vaccine. The media is reporting this as 92% effective. It also gives you a confidence interval that has the true odds ratio within it 95% of the time.  That interval is 6.8 to 22.24. To turn odds in probability p=odds/1+odds
-
 ```{r}
-effectiveness =  11.96541 /( 11.96541  +1)
-print(effectiveness*100)
-```
-## Conclusion effectiveness is simply turning odds (in this case an odds_ratio) into a percentage If the odds of something happening is O, then the probability of it happening is O/(1 + O). To turn probability to a percent just multiply by 100. However effectivness should not just be a number - It should be cast as a confidence interval.
-
-```{r}
-low=(6.8/(6.8 + 1))*100
-hi=(22.24/(22.24 +1))*100
+fish <- fisher.test(results)
 options(digits=2)
 ```
+
+
+
+```{r}
+low=(fish$conf.int[1]/(fish$conf.int[1] + 1))*100
+hi=(fish$conf.int[2]/(fish$conf.int[2] + 1))*100
+```
+
+
+## The fisher exact test is an odds-ratio test. It is commonly used in clinical trials to test the effectiveness of preventitive drugs like vaccines. In this case it says the odds of getting covid is `r fish$estimate` times greater if you had taken the placebo than if you had taken the vaccine. The media is reporting this as 92% effective. It also gives you a confidence interval that has the true odds ratio within it 95% of the time.  That interval is `r fish$conf.int[1]` to `r fish$conf.int[2]`
+
+
+## Conclusion effectiveness is simply turning odds (in this case an odds_ratio) into a percentage If the odds of something happening is O, then the probability of it happening is O/(1 + O). To turn probability to a percent just multiply by 100. However effectivness should not just be a number - It should be cast as a confidence interval.
+
+
 
 ## Effectiveness Confidence Interval `r low`  to `r hi`
 
