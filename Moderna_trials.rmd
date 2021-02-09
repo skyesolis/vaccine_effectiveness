@@ -40,7 +40,7 @@ fish <- fisher.test(results)
 options(digits=2)
 ```
 
-## The fisher exact test is an odds-ratio test. It is commonly used in clinical trials to test the effectiveness of preventitive drugs like vaccines. In this case it says the odds of getting covid is `r fish$estimate` times greater if you had taken the placebo than if you had taken the vaccine. The media is reporting this as 95% effective. It also gives you a confidence interval that has the true odds ratio within it 95% of the time.  That interval is `r fish$conf.int[1]` to `r fish$conf.int[2]`
+## The fisher exact test is an odds-ratio test. It is commonly used in clinical trials to test the effectiveness of preventitive drugs like vaccines. In this case it says the odds of getting covid is `r fish$estimate` times greater if you had taken the placebo than if you had taken the vaccine. The p-value of this test was 1.12e-16 leading us to soundly reject the null hypothesis that the odds ratio could be 1:1. The media is reporting this as 95% effective. It also gives you a confidence interval that has the true odds ratio within it 95% of the time.  That interval is `r fish$conf.int[1]` to `r fish$conf.int[2]`
 
 ```{r}
 low=(fish$conf.int[1]/(fish$conf.int[1] + 1))*100
