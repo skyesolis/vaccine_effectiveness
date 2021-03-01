@@ -1,0 +1,50 @@
+---
+title: "Novavax"
+author: "Dr K"
+date: "2/28/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(tigerstats)
+require(tidyverse)
+require(knitr)
+```
+
+## Create a table from the published data  
+
+Novavax’s Covid-19 vaccine NVX-CoV2373 was investigated in a Phase III UK trial with 15,000 participants. A total of 62 Covid-19 cases were observed, 56 in the placebo group and six in the vaccine group, with 50% of cases from the B.117 variant found in the UK, showing good protection against the new variant. The vaccine was less effective in a separate Phase IIb trial in South Africa with 4,400 participants. Many of the Covid-19 cases in this trial were caused by the new SARS-CoV-2 variant B.1.351 first found in South Africa.
+
+
+```{r}
+groupsize = 15000
+subgp = groupsize/2
+vaccine = c(subgp-6,6)
+placebo =  c(subgp-56,56)
+results = as.table(cbind(vaccine,placebo))
+rownames(results) <- c("none","covid")
+
+```
+
+## Look at a "percentage barchart" of the reported cases.  If the vaccine is innefective then covid should be more or less equally distributed between the vaccine and the placebo.  The more effective the vaccine the lower would be the percent in the group of covid.
+
+```{r}
+barchartGC(results,type = "percent")
+```  
+
+## Wow, that barchart shows that in the group who got covid most of them had taken the placebo.  The placebo group is close to 10 times bigger than the vaccine group.
+
+```{r}
+fish <- fisher.test(results)
+options(digits=2)
+```
+
+## The fisher exact test is an odds-ratio test. It is commonly used in clinical trials to test the effectiveness of preventitive drugs like vaccines. In this case it says the odds of getting covid is `r fish$estimate` times greater if you had taken the placebo than if you had taken the vaccine. The p-value for the fisher test was `r fish$p.value` leading to a sound rejection of the null hypothesis. The media is reporting this as 86% effective. It also gives you a confidence interval that has the true odds ratio within it 95% of the time.  That interval is `r fish$conf.int[1]` to `r fish$conf.int[2]`
+
+```{r}
+low=(fish$conf.int[1]/(fish$conf.int[1] + 1))*100
+hi=(fish$conf.int[2]/(fish$conf.int[2] + 1))*100
+```
+
+## Effectiveness Confidence Interval `r low`  to `r hi`
