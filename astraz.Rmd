@@ -1,0 +1,75 @@
+---
+title: "Astrazenica"
+author: "Dr. J"
+date: "3/23/2021"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(tigerstats)
+require(tidyverse)
+require(knitr)
+```
+
+# What they did:  
+
+## The preliminary findings were foun on line, Astrazenica website, March 2021. Results are based on data are from a 2:1 vaccine to placebo trial, 32499 participants. Two-third of the participants (21666) got the vaccine; one-third (10833) got the placebo. In this study a total of 141 participants came down with COVID19; Astrazenica claimed effectiveness of 79%  We used the total number or participants who got COVID19 (141) and the claimed effectiveness to back out the number of infected in both groups. Our method allowed us to manipulate the number of vacinnated participants who got COVID19 to yield 79% effectiveness. 
+
+
+```{r}
+numv = 49  # change this number
+nump = 141-numv
+vaccine = c(21666-numv,numv)
+placebo =  c(10833-nump,nump)
+results = as.table(cbind(vaccine,placebo))
+rownames(results) <- c("none","covid")
+```
+
+## We show two barcharts - The first is results of the study and the second is what it would look like if the vaccine was not effective.
+
+
+
+```{r}
+barchartGC(results,type = "percent", main="Results from the Astrazenica Clinical Trial")
+```
+  
+We run a chi-sq test using Chisq Gc in order to obtain expected results when vaccine does not work.
+
+```{r}
+ch = chisqtestGC(results)
+expTable = ch$expected
+#resultsExp = as.table(cbind(vaccine2,placebo2))
+rownames(expTable) <- c("none","covid")
+barchartGC(expTable,type = "percent",main="Expected results of ineffective vaccine \n With the same patient assignment structure")
+```
+  
+## Notice how different the two barcharts appear.  Even your grandma could see that most of the people that got covid in the Astrazenica trial came from the group of people who received the placebo!
+
+```{r}
+fResult = fisher.test(results)
+print(fResult)
+fisher.test(expTable)
+```
+```{r}
+fish <- fisher.test(results)
+options(digits=2)
+```
+
+
+
+```{r}
+low=(fish$conf.int[1]/(fish$conf.int[1] + 1))*100
+hi=(fish$conf.int[2]/(fish$conf.int[2] + 1))*100
+```
+
+
+## The fisher exact test is an odds-ratio test. It is commonly used in clinical trials to test the effectiveness of preventitive drugs like vaccines. In this case it says the odds of getting covid is `r fish$estimate` times greater if you had taken the placebo than if you had taken the vaccine. The p-value for the fisher test was `r fish$p.value` leading to a strong rejection of the null.  The media is reporting this as 79% effective. This analysis gives you a confidence interval that has the true odds ratio within it 95% of the time.  That interval is `r fish$conf.int[1]` to `r fish$conf.int[2]`  
+
+
+## Conclusion effectiveness is simply turning odds (in this case an odds_ratio) into a percentage If the odds of something happening is O, then the probability of it happening is O/(1 + O). To turn probability to a percent just multiply by 100. However effectivness should not just be a number - It should be cast as a confidence interval.
+
+
+## Effectiveness = `r fResult$estimate/(fResult$estimate+1)*100`
+## Effectiveness Confidence Interval `r low`  to `r hi`
