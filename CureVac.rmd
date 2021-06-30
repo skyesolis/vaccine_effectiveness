@@ -1,0 +1,50 @@
+---
+title: "CureVac"
+author: "Dr K"
+date: "6/30/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(tigerstats)
+require(tidyverse)
+require(knitr)
+```
+
+## Create a table from the published data  
+
+Curevax entry
+
+
+```{r}
+groupsize = 40000
+subgp = groupsize/2
+vaccine = c(subgp-83,83)
+placebo =  c(subgp-145,145)
+results = as.table(cbind(vaccine,placebo))
+rownames(results) <- c("none","covid")
+
+```
+
+## Look at a "percentage barchart" of the reported cases.  If the vaccine is innefective then covid should be more or less equally distributed between the vaccine and the placebo.  The more effective the vaccine the lower would be the percent in the group of covid.
+
+```{r}
+barchartGC(results,type = "percent")
+```  
+
+## not so hot
+
+```{r}
+fish <- fisher.test(results)
+options(digits=2)
+```
+
+## The fisher exact test is an odds-ratio test. It is commonly used in clinical trials to test the effectiveness of preventitive drugs like vaccines. In this case it says the odds of getting covid is `r fish$estimate` times greater if you had taken the placebo than if you had taken the vaccine. The p-value for the fisher test was `r fish$p.value` .  It also gives you a confidence interval that has the true odds ratio within it 95% of the time.  That interval is `r fish$conf.int[1]` to `r fish$conf.int[2]`
+
+```{r}
+low=(fish$conf.int[1]/(fish$conf.int[1] + 1))*100
+hi=(fish$conf.int[2]/(fish$conf.int[2] + 1))*100
+```
+
+## Effectiveness Confidence Interval `r low`  to `r hi`
